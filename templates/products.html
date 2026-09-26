@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Товары — PC-Комплект{% endblock %}
+{% block content %}
+<h1 class="page-title">Комплектующие ПК</h1>
+
+<div class="toolbar">
+    {% if can_filter %}
+    <input type="text" id="search-input" class="search-input" placeholder="Поиск по названию, категории, производителю, поставщику...">
+
+    <select id="supplier-select" class="select">
+        <option value="">Все поставщики</option>
+        {% for s in suppliers %}
+        <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button id="sort-btn" class="btn btn-outline btn-small" data-sort="">
+        Кол-во на складе: без сортировки
+    </button>
+    {% endif %}
+
+    {% if can_manage %}
+    <a href="{{ url_for('product_new') }}" class="btn btn-primary btn-add">+ Добавить товар</a>
+    {% endif %}
+</div>
+
+<div class="table-wrap">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Фото</th>
+            <th>Наименование</th>
+            <th>Категория</th>
+            <th>Описание</th>
+            <th>Производитель</th>
+            <th>Поставщик</th>
+            <th>Цена</th>
+            <th>Ед. изм.</th>
+            <th>Кол-во</th>
+            <th>Скидка</th>
+        </tr>
+    </thead>
+    <tbody id="products-body"></tbody>
+</table>
+</div>
+<p id="empty-msg" class="empty-msg" style="display:none;">Товары не найдены.</p>
+
+<script id="initial-products" type="application/json">{{ products_json|safe }}</script>
+<script>
+    window.CAN_MANAGE = {{ 'true' if can_manage else 'false' }};
+    window.CAN_FILTER = {{ 'true' if can_filter else 'false' }};
+</script>
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
+{% endblock %}

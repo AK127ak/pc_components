@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Вход — PC-Комплект{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <div class="login-card">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="login-logo">
+        <h1>PC-Комплект</h1>
+        <p class="subtitle">Магазин комплектующих для ПК</p>
+
+        <form method="post" action="{{ url_for('login') }}" class="login-form">
+            <label for="login">Логин</label>
+            <input type="text" id="login" name="login" required autofocus>
+
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit" class="btn btn-primary btn-block">Войти</button>
+        </form>
+
+        <div class="divider"><span>или</span></div>
+
+        <a href="{{ url_for('guest_login') }}" class="btn btn-outline btn-block">Продолжить как гость</a>
+
+        <p class="hint">
+            Демо-доступы: <b>client / client123</b>, <b>manager / manager123</b>, <b>admin / admin123</b>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# база данных и загруженные пользователем файлы
+shop.db
+static/uploads/*
+!static/uploads/.gitkeep
+
+.vscode/
+.idea/
+.DS_Store
+
+# сгенерированные при рендере ER-диаграммы промежуточные файлы
+db/*.png
+!docs/screenshots/*.png

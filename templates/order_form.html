@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Редактирование' if order else 'Добавление' }} заказа — PC-Комплект{% endblock %}
+{% block content %}
+<a href="{{ url_for('orders_page') }}" class="back-link">&larr; Назад к списку заказов</a>
+
+<h1 class="page-title">{{ 'Редактирование заказа' if order else 'Добавление заказа' }}</h1>
+
+<form method="post" class="product-form">
+    <div class="form-row">
+        <label for="article">Артикул *</label>
+        <input type="text" id="article" name="article" required value="{{ order.article if order else suggested_article }}">
+    </div>
+
+    <div class="form-row">
+        <label for="product_id">Товар *</label>
+        <select id="product_id" name="product_id" required>
+            {% for p in products %}
+            <option value="{{ p.id }}" {{ 'selected' if order and order.product_id==p.id else '' }}>{{ p.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="quantity">Количество *</label>
+        <input type="number" id="quantity" name="quantity" min="1" step="1" required
+               value="{{ order.quantity if order else 1 }}">
+    </div>
+
+    <div class="form-row">
+        <label for="status">Статус заказа *</label>
+        <select id="status" name="status" required>
+            {% for s in statuses %}
+            <option value="{{ s }}" {{ 'selected' if order and order.status==s else '' }}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="pickup_address">Адрес пункта выдачи *</label>
+        <input type="text" id="pickup_address" name="pickup_address" required
+               value="{{ order.pickup_address if order else '' }}">
+    </div>
+
+    <div class="form-row form-row-inline">
+        <div>
+            <label for="order_date">Дата заказа *</label>
+            <input type="date" id="order_date" name="order_date" required
+                   value="{{ order.order_date.isoformat() if order else '' }}">
+        </div>
+        <div>
+            <label for="issue_date">Дата выдачи</label>
+            <input type="date" id="issue_date" name="issue_date"
+                   value="{{ order.issue_date.isoformat() if order and order.issue_date else '' }}">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{{ url_for('orders_page') }}" class="btn btn-outline">Отмена</a>
+    </div>
+</form>
+{% endblock %}

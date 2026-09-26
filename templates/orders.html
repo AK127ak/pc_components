@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Заказы — PC-Комплект{% endblock %}
+{% block content %}
+<div class="toolbar">
+    <h1 class="page-title" style="margin:0;">Заказы</h1>
+    {% if can_manage %}
+    <a href="{{ url_for('order_new') }}" class="btn btn-primary btn-add">+ Добавить заказ</a>
+    {% endif %}
+</div>
+
+<div class="table-wrap">
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Артикул</th>
+            <th>Товар</th>
+            <th>Кол-во</th>
+            <th>Статус</th>
+            <th>Адрес пункта выдачи</th>
+            <th>Дата заказа</th>
+            <th>Дата выдачи</th>
+            {% if can_manage %}<th></th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in orders %}
+        <tr class="{{ 'row-clickable' if can_manage else '' }}"
+            {% if can_manage %}onclick="window.location='{{ url_for('order_edit', order_id=o.id) }}'"{% endif %}>
+            <td>{{ o.article }}</td>
+            <td>{{ o.product.name }}</td>
+            <td>{{ o.quantity }}</td>
+            <td><span class="status-badge">{{ o.status }}</span></td>
+            <td>{{ o.pickup_address }}</td>
+            <td>{{ o.order_date.strftime('%d.%m.%Y') }}</td>
+            <td>{{ o.issue_date.strftime('%d.%m.%Y') if o.issue_date else '\u2014' }}</td>
+            {% if can_manage %}
+            <td onclick="event.stopPropagation();">
+                <form method="post" action="{{ url_for('order_delete', order_id=o.id) }}"
+                      onsubmit="return confirm('Удалить заказ {{ o.article }}?');">
+                    <button type="submit" class="btn btn-danger btn-small">Удалить</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="empty-msg">Заказов пока нет.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

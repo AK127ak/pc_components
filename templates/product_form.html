@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Редактирование' if product else 'Добавление' }} товара — PC-Комплект{% endblock %}
+{% block content %}
+<a href="{{ url_for('products_page') }}" class="back-link">&larr; Назад к списку товаров</a>
+
+<h1 class="page-title">{{ 'Редактирование товара' if product else 'Добавление товара' }}</h1>
+
+<form method="post" enctype="multipart/form-data" class="product-form">
+    <div class="form-row">
+        <label>ID товара</label>
+        <input type="text" value="{{ next_id }}" disabled>
+    </div>
+
+    <div class="form-row">
+        <label for="image">Фото товара (макс. 300×200, будет сжато автоматически)</label>
+        <img class="form-thumb"
+             src="/static/{{ product.image_path if product and product.image_path else 'img/picture.png' }}"
+             alt="" id="preview-img">
+        <input type="file" id="image" name="image" accept=".png,.jpg,.jpeg,.gif">
+    </div>
+
+    <div class="form-row">
+        <label for="name">Наименование товара *</label>
+        <input type="text" id="name" name="name" required value="{{ product.name if product else '' }}">
+    </div>
+
+    <div class="form-row">
+        <label for="category_id">Категория *</label>
+        <select id="category_id" name="category_id" required>
+            {% for c in categories %}
+            <option value="{{ c.id }}" {{ 'selected' if product and product.category_id==c.id else '' }}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="description">Описание</label>
+        <textarea id="description" name="description" rows="3">{{ product.description if product else '' }}</textarea>
+    </div>
+
+    <div class="form-row">
+        <label for="manufacturer_id">Производитель *</label>
+        <select id="manufacturer_id" name="manufacturer_id" required>
+            {% for m in manufacturers %}
+            <option value="{{ m.id }}" {{ 'selected' if product and product.manufacturer_id==m.id else '' }}>{{ m.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="supplier_id">Поставщик *</label>
+        <select id="supplier_id" name="supplier_id" required>
+            {% for s in suppliers %}
+            <option value="{{ s.id }}" {{ 'selected' if product and product.supplier_id==s.id else '' }}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-row form-row-inline">
+        <div>
+            <label for="price">Цена, ₽ *</label>
+            <input type="number" id="price" name="price" min="0" step="0.01" required
+                   value="{{ product.price if product else '' }}">
+        </div>
+        <div>
+            <label for="unit">Единица измерения *</label>
+            <input type="text" id="unit" name="unit" required value="{{ product.unit if product else 'шт.' }}">
+        </div>
+    </div>
+
+    <div class="form-row form-row-inline">
+        <div>
+            <label for="quantity">Количество на складе *</label>
+            <input type="number" id="quantity" name="quantity" min="0" step="1" required
+                   value="{{ product.quantity if product else 0 }}">
+        </div>
+        <div>
+            <label for="discount">Скидка, %</label>
+            <input type="number" id="discount" name="discount" min="0" max="100" step="1"
+                   value="{{ product.discount if product else 0 }}">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{{ url_for('products_page') }}" class="btn btn-outline">Отмена</a>
+    </div>
+</form>
+
+<script>
+document.getElementById("image").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById("preview-img").src = URL.createObjectURL(file);
+});
+</script>
+{% endblock %}
